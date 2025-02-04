@@ -1,0 +1,18 @@
+name: MLProject
+channels:
+  - default
+  - conda-forge
+dependencies:
+  - python>=3.11,<3.12
+  - pip
+  - ipython
+  - ipykernel
+  - pip:
+      - flax==0.8.5
+      - jax[cpu]==0.4.30
+      - lightning==2.3.3
+      - numpy==1.26.4
+      - optax==0.2.3
+      - torch==2.2.2
+      - torchvision==0.17.2
+      - torchaudio==2.2.2
