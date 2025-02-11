@@ -1,4 +1,4 @@
-name: MLProject
+name: SyntheticTimeSeries
 channels:
   - default
   - conda-forge
@@ -8,11 +8,12 @@ dependencies:
   - ipython
   - ipykernel
   - pip:
-      - flax==0.8.5
-      - jax[cpu]==0.4.30
-      - lightning==2.3.3
-      - numpy==1.26.4
-      - optax==0.2.3
+      - matplotlib==3.10.0
+      - numpy==2.2.2
+      - pandas==2.2.3
+      - scikit-learn==1.6.1
+      - seaborn==0.13.2
       - torch==2.2.2
-      - torchvision==0.17.2
       - torchaudio==2.2.2
+      - torchvision==0.17.2
+      - yfinance==0.2.52
