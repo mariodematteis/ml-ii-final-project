@@ -1,23 +1,147 @@
 \documentclass{article}
 
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{authblk}
-\usepackage{graphicx} % Required for inserting images
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{subcaption}
+% Keep an eye on the keywords
 
-\title{Machine Learning II - Final Project}
-\author[1]{Grant Sawyer}
-\author[2]{Harold Yuan}
-\author[2]{Kaushik Tallam}
-\author[3]{Mario Nicolo' De Matteis}
-\author[4]{Tristan Roemer}
+\usepackage[backend=biber,style=authoryear-comp]{biblatex}
+\addbibresource{references.bib}
 
-\affil[1]{}
+\title{Generating Synthetic Financial Time-Series Data Through Generative Adversatial Network\\[0.5em] \large Methodologies And Comparison Among Different Deep Learning Structures}
 
-\date{January 2025}
+\author[1]{Grant Sawyer\thanks{\href{mailto:gsawyer@andrew.cmu.edu}{gsawyer@andrew.cmu.edu}}}
+\author[1]{Harold Yuan\thanks{\href{mailto:zhongfay@andrew.cmu.edu}{zhongfay@andrew.cmu.edu}}}
+\author[1]{Kaushik Tallam\thanks{\href{mailto:ktallam@andrew.cmu.edu}{ktallam@andrew.cmu.edu}}}
+\author[1]{Mario Nicolo' De Matteis\thanks{\href{mailto:mdematte@andrew.cmu.edu}{mdematte@andrew.cmu.edu}}}
+\author[1]{Tristan Roemer\thanks{\href{mailto:troemer@andrew.cmu.edu}{troemer@andrew.cmu.edu}}}
+
+\affil[1]{Carnegie Mellon University, MSCF, New York, USA}
+
+\usepackage{cleveref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\date{February 2025}
 
 \begin{document}
 
 \maketitle
 
+\begin{abstract}
+    This is a brief abstract of your paper, summarizing the key points and findings.
+\end{abstract}
+
+\noindent \textbf{Keywords:} Generative Adversatial Networks, Financial Time-Series, Deep Learning
+
 \section{Introduction}
+
+Hedge Funds, Proprietary Trading Firms, and other financial institutions rely on large amounts of data to make informed decisions. However, obtaining high-quality financial data can be challenging due to privacy concerns, data access restrictions, and the high cost of data acquisition. To address these challenges, researchers have developed generative models that can synthesize realistic financial time-series data. These models can be used to augment existing datasets, generate new data for backtesting trading strategies, and simulate market conditions for risk management. Over the last few years, many different developments have been conducted in the field synthethic financial time-series data generation. In this paper, we provide a comprehensive overview of the methodologies and comparison among different deep learning structures used to generate synthetic financial time-series data. Our main focus is on the Generative Adversatial Networks (GANs) defined by the use of different neutral network structures. \textcite{EckerliFlorian2021GANi} mentions that
+
+\section{Model}
+
+Generative Adversarial Networks (GANs) provide a framework to learn complex data distributions through a two-player minimax game involving two neural networks: a \textbf{generator} and a \textbf{discriminator}.
+
+\subsection*{1. Setup and Notation}
+
+\begin{itemize}
+    \item \textbf{Real Data Distribution:}
+    Let $ p_{\text{data}}(x) $ denote the probability distribution of real data samples $ x \in \mathcal{X} $.
+
+    \item \textbf{Latent Space and Prior:}
+    Define a latent space $ \mathcal{Z} $ with a simple prior distribution $ p_z(z) $ (e.g., a Gaussian or uniform distribution). A latent variable $ z \sim p_z(z) $ is sampled and then transformed into the data space.
+
+    \item \textbf{Generator:}
+    The generator is a function $ G: \mathcal{Z} \to \mathcal{X} $ parameterized by $ \theta_G $. It maps a latent variable $ z $ to a synthetic sample $ G(z) $, thereby inducing an implicit distribution $ p_g(x) $ over the data space.
+
+    \item \textbf{Discriminator:}
+    The discriminator is a function $ D: \mathcal{X} \to [0,1] $ parameterized by $ \theta_D $. It outputs a scalar representing the probability that a given sample $ x $ originates from the real data distribution $ p_{\text{data}}(x) $ rather than from $ p_g(x) $.
+\end{itemize}
+
+\subsection*{2. The Minimax Game}
+
+The GAN framework is formulated as a two-player minimax game with the value function
+
+\[
+\min_{G} \max_{D} V(D,G) = \mathbb{E}_{x\sim p_{\text{data}}(x)}\big[\log D(x)\big] + \mathbb{E}_{z\sim p_z(z)}\big[\log (1 - D(G(z)))\big].
+\]
+
+\begin{itemize}
+    \item \textbf{Discriminator’s Objective:}
+    For a fixed generator $ G $, the discriminator $ D $ is trained to maximize the probability of correctly classifying real data and generated data:
+
+    \[
+    \mathbb{E}_{x\sim p_{\text{data}}(x)}\big[\log D(x)\big] + \mathbb{E}_{x\sim p_g(x)}\big[\log (1 - D(x))\big].
+    \]
+
+    \item \textbf{Generator’s Objective:}
+    Simultaneously, the generator $ G $ is trained to minimize the same objective (i.e., to “fool” $ D $) by generating samples $ G(z) $ that maximize the discriminator's misclassification:
+
+    \[
+    \min_{G} \mathbb{E}_{z\sim p_z(z)}\big[\log (1 - D(G(z)))\big].
+    \]
+\end{itemize}
+
+\subsection*{3. Optimal Discriminator}
+
+For any fixed generator $ G $, the optimal discriminator $ D^*_G(x) $ can be derived by maximizing the value function pointwise. For each $ x \in \mathcal{X} $, consider:
+
+\[
+f(D(x)) = p_{\text{data}}(x) \log D(x) + p_g(x) \log (1 - D(x)).
+\]
+
+Setting the derivative with respect to $ D(x) $ to zero yields:
+
+\begin{equation}
+\frac{p_{\text{data}}(x)}{D(x)} - \frac{p_g(x)}{1-D(x)} = 0 \quad \Longrightarrow \quad D^*_G(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_g(x)}.
+\end{equation}
+
+\subsection*{4. Connection to Jensen-Shannon Divergence}
+
+Substituting the optimal discriminator $ D^*_G $ back into the value function, we obtain:
+
+\begin{equation}
+    V(G, D^*_G) = -\log(4) + 2\, \mathrm{JSD}\big(p_{\text{data}} \,\|\, p_g\big)
+\end{equation}
+
+where $ \mathrm{JSD} $ denotes the Jensen-Shannon Divergence. Since $ \mathrm{JSD}(p_{\text{data}} \,\|\, p_g) \geq 0 $ with equality if and only if $ p_g = p_{\text{data}} $, minimizing $ V(G, D^*_G) $ with respect to $ G $ forces the generator’s distribution $ p_g(x) $ to converge toward the real data distribution $ p_{\text{data}}(x) $.
+
+\subsection*{5. Training Procedure}
+
+In practice, GAN training alternates between the following steps:
+\begin{enumerate}
+    \item \textbf{Discriminator Update:}
+    Maximize $ V(D, G) $ with respect to $ \theta_D $ while keeping $ \theta_G $ fixed.
+
+    \item \textbf{Generator Update:}
+    Minimize $ V(D, G) $ (or a modified loss, such as maximizing $ \log D(G(z)) $ for stronger gradients) with respect to $ \theta_G $ while keeping $ \theta_D $ fixed.
+\end{enumerate}
+
+These updates are typically performed using stochastic gradient descent or its variants.
+
+\subsection*{Application to Financial Time-Series Data}
+
+In the context of financial time-series generation, the generator $ G $ is designed to produce synthetic financial sequences (e.g., asset prices, returns) that capture the underlying statistical properties of the real data. The discriminator $ D $ evaluates these sequences, providing a feedback loop that drives the generator to model the complex dependencies and temporal structures inherent in financial markets.
+
+This mathematically rigorous formulation underpins the GAN framework and lays the foundation for generating high-fidelity synthetic financial time-series data.
+
+\section{Data and Variable of Interest}
+
+\section{Results and Evaluations}
+
+\section{Conclusion}
+
+\section{References}
+\printbibliography
 
 \end{document}
