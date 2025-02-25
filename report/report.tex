@@ -51,22 +51,21 @@
 
 \section{Introduction}
 
-Hedge Funds, Proprietary Trading Firms, and other financial institutions rely on large amounts of data to make informed decisions. However, obtaining high-quality financial data can be challenging due to privacy concerns, data access restrictions, and the high cost of data acquisition. To address these challenges, researchers have developed generative models that can synthesize realistic financial time-series data. These models can be used to augment existing datasets, generate new data for backtesting trading strategies, and simulate market conditions for risk management. Over the last few years, many different developments have been conducted in the field of synthethic financial time-series data generation. In this paper, we provide a comprehensive overview of the methodologies and comparison among different deep learning structures used to generate synthetic financial time-series data. In particular, we aim to synthesize new price time series data that can be highly useful for various applications. These include backtesting trading strategies, training machine learning models, and conducting stress tests and scenario analyses. By generating realistic synthetic data, we can provide financial institutions with a valuable resource to enhance their decision-making processes, improve model robustness, and better prepare for adverse market conditions.
+Hedge Funds, Proprietary Trading Firms, and other financial institutions rely on large amounts of data to make informed decisions. However, obtaining high quality financial data can be challenging due to data scarcity, privacy, and cost. As a result, researchers developed generative models that can synthetically generate realistic financial time series data. These models can be used to augment existing datasets, generate new data for backtesting trading strategies, and simulate market conditions for risk management. Over the last few years, many different developments have been conducted in the field of synthetic financial time series data generation. In this paper, we provide a comprehensive overview of the methodologies and comparisons among different deep learning structures used to generate synthetic financial time series data. In particular, we aim to synthesize new price time series data. The data is intended to be used for  backtesting trading strategies, training machine learning models, and conducting stress tests and scenario analyses. By generating realistic synthetic data, we can provide financial institutions with a valuable resource to enhance their decision making processes, improve model robustness, and better prepare for adverse market conditions.
 
-Given the great impact and power of generative AI models, we decided to exploit one of the main pillars of Generative AI: the Generative Adversarial Network develope by \textcite{goodfellow_generative_2014}. GANs have been extensively used in the computer vision field, particularly in image generation. \textcite{iglesias_survey_2023} show the ability to generate realistic data samples through adversarial training makes them a powerful tool for synthesizing financial time-series data as well. This groundbreaking model has profoundly influenced subsequent research by demonstrating that adversarial training can generate remarkably realistic data samples. \textcite{EckerliFlorian2021GANi} mentions different applications of GANs, including market manipulation, credit card fraud, portfolio optimization and market prediction.
+Given the significant impact and popularity of generative AI models, we decided to utilize one of the main pillars of Generative AI, the Generative Adversarial Network (GAN) develope by \textcite{goodfellow_generative_2014}. GANs have been used mainly in the computer vision field, particularly in image generation. However, \textcite{iglesias_survey_2023} show that the ability to generate realistic data samples through adversarial training makes GANs a powerful tool for synthesizing financial time series data. This groundbreaking model has subsequently influenced research by demonstrating that adversarial training can generate realistic data samples. \textcite{EckerliFlorian2021GANi} mentions different applications of GANs, including market manipulation, credit card fraud, portfolio optimization and market prediction.
 
-In the realm of synthetic financial data, several other aspects are equally important. For example, robust data augmentation techniques can enhance model reliability, and careful evaluation of synthetic data against real-world financial indicators is crucial for ensuring its practical utility. Moreover, addressing the temporal dependencies and non-linear dynamics inherent in financial markets requires advanced modeling techniques that go beyond the original GAN framework. In simple terms, we aim to find out the distribution by which the prices have been generated. When looking for new data, among the most well-known techniques, we recall different and exotic sampling techniques that tend to be very complex and computationally expensive. As highlighted by \textcite{cont_empirical_2001}, understanding the empirical properties of asset returns, such as heavy tails and volatility clustering, is essential for developing realistic financial models. These properties must be carefully considered when designing synthetic data generation frameworks to ensure that the generated data accurately reflects the behavior observed in real financial markets.
+Several other aspects are also significantly important in the realm of synthetic financial data. For example, robust data augmentation techniques can enhance model reliability, and careful evaluation of synthetic data against real world financial indicators is crucial for ensuring its practicality. Moreover, addressing the temporal dependencies and non-linear dynamics inherent in financial markets requires advanced modeling techniques that go beyond the original GAN framework. Put simply, we aim to find the distribution by which the prices have been generated. As highlighted by Cont (2001), understanding the empirical properties of asset returns, such as heavy tails and volatility clustering, is essential for developing realistic financial models. These properties must be carefully considered when designing synthetic data generation frameworks to ensure that the generated data accurately reflects the behavior observed in real financial markets.
 
-We designed the neural networks for the GAN models by implementing three different types of layers: Attention, CNN, and LSTM. We decided to implement these three different types of layers because each offers unique advantages for capturing the complex dynamics of financial time series data. In accordance with the literature, Attention layers allow the model to focus on significant temporal patterns, enhancing its ability to prioritize key segments of the data. Convolutional Neural Networks (CNNs) are effective at detecting localized patterns and extracting spatial features, which are crucial for modeling short-term trends and volatility clusters. Long Short-Term Memory (LSTM) networks excel at capturing long-range dependencies and the sequential nature of financial data, making them ideal for modeling the temporal evolution of asset prices. By integrating these diverse neural network components, we aim to improve the overall performance and robustness of our GAN models in generating realistic synthetic financial time series data.
+We designed the neural networks for the GAN models by implementing three different types of layers: Attention, CNN, and LSTM. We decided to implement these three different types of layers as each offers unique advantages for capturing the complex dynamics of financial time series data.
 
-Building on these insights, our paper aims to explore and compare the effectiveness of various neural network architectures within the GAN framework. In particular, we focus on:
 \begin{itemize}
     \item \textbf{Attention Layers}: To capture and prioritize significant temporal patterns, thereby enabling the model to focus on key segments of the time series.
     \item \textbf{Convolutional Neural Networks (CNNs)}: To detect localized patterns and extract spatial features from financial time series data.
     \item \textbf{Long Short-Term Memory (LSTM) Networks}: To model long-range dependencies and effectively capture the sequential characteristics of financial data.
 \end{itemize}
 
-Through a detailed comparative analysis, this study evaluates the performance of these architectures in generating synthetic financial time series data. In particular, we investigate how the integration of attention mechanisms can enhance the synthesis process by more accurately reflecting the intricate dynamics of financial markets.
+Through a comparative analysis, this study evaluates the performance of these architectures in generating synthetic financial time series data. In particular, we investigate how the integration of attention mechanisms can enhance the synthesis process by more accurately reflecting the intricate dynamics of financial markets.
 
 \vspace{1em}
 \noindent\textit{The project code, datasets, and additional resources are available at our GitHub repository: \url{https://github.com/mariodematteis/ml-ii-final-project}.}
@@ -85,7 +84,7 @@ By using these datasets, we can comprehensively evaluate our GAN based approach.
 
 Generative Adversarial Networks (GANs) provide a framework to learn complex data distributions through a two-player minimax game involving two neural networks: a \textbf{generator} and a \textbf{discriminator}. The classical formulation of GANs is outlined below, after which we describe our enhanced generator architectures that incorporate attention, convolutional, and long short-term memory layers.
 
-\subsection*{1. Setup and Notation}
+\subsection*{Setup and Notation}
 
 \begin{itemize}
     \item \textbf{Real Data Distribution:} Let $p_{\text{data}}(x)$ denote the probability distribution of real data samples $x \in \mathcal{X}$.
@@ -94,7 +93,7 @@ Generative Adversarial Networks (GANs) provide a framework to learn complex data
     \item \textbf{Discriminator:} The discriminator is a function $D: \mathcal{X} \to [0,1]$ parameterized by $\theta_D$. It outputs a scalar representing the probability that a given sample $x$ originates from the real data distribution $p_{\text{data}}(x)$ rather than from $p_g(x)$.
 \end{itemize}
 
-\subsection*{2. The Minimax Game}
+\subsection*{The Minimax Game}
 
 The GAN framework is formulated as a two-player minimax game with the value function
 
@@ -116,7 +115,7 @@ The GAN framework is formulated as a two-player minimax game with the value func
     \]
 \end{itemize}
 
-\subsection*{3. Optimal Discriminator and Jensen-Shannon Divergence}
+\subsection*{Optimal Discriminator and Jensen-Shannon Divergence}
 
 For any fixed generator $G$, the optimal discriminator $D^*_G(x)$ is obtained by maximizing the value function pointwise:
 \[
@@ -132,7 +131,7 @@ V(G, D^*_G) = -\log(4) + 2\, \mathrm{JSD}\big(p_{\text{data}} \,\|\, p_g\big),
 \]
 where $\mathrm{JSD}$ denotes the Jensen-Shannon Divergence. Minimizing $V(G, D^*_G)$ with respect to $G$ forces $p_g(x)$ to converge to $p_{\text{data}}(x)$.
 
-\subsection*{4. Training Procedure}
+\subsection*{Training Procedure}
 
 In practice, GAN training alternates between:
 \begin{enumerate}
@@ -141,25 +140,25 @@ In practice, GAN training alternates between:
 \end{enumerate}
 These updates are typically performed using stochastic gradient descent or its variants. In our specific case, for each of the model trained we used the Adam optimizer with a learning rate of $ 0.0002 $ for both the Discriminator and the Generator.
 
-\subsection*{5. Enhanced Generator Architectures}
+\subsection*{Enhanced Generator Architectures}
 
 While the classical GAN framework provides a robust foundation for generative modeling, financial time series data pose unique challenges due to their complex temporal dependencies and nonlinear structures. To address these issues, we extend the generator architecture by incorporating advanced neural network components, as detailed below.
 
-\subsubsection*{5.1 Attention Layers}
+\subsubsection*{Attention Layers}
 
 Attention mechanisms have revolutionized various fields, particularly natural language processing, by allowing models to dynamically focus on different parts of the input sequence \textcite{vaswani_attention_2023}. In our generator, we incorporate a Self-Attention layer inspired by this work. The attention mechanism computes a weighted sum of feature representations across time steps, enabling the model to prioritize significant temporal patterns. This approach is particularly beneficial for capturing long-range dependencies and subtle patterns in financial data. In quantitative finance, attention-based models have garnered significant interest; for example, \textcite{qin_dual-stage_2017} introduced a dual-stage attention-based recurrent neural network for time series prediction, while \textcite{chen_exploring_2019} leveraged attention mechanisms for enhanced stock price forecasting. Our implementation integrates a series of deconvolutional layers followed by a Self-Attention module, thereby enhancing the model's capability to generate realistic and coherent time series data.
 
-\subsubsection*{5.2 Convolutional Neural Networks (CNNs)}
+\subsubsection*{Convolutional Neural Networks (CNNs)}
 
 CNNs are well-suited for detecting localized patterns and extracting spatial features from time series data. By applying convolutional filters along the temporal dimension, CNNs can capture short-term trends and volatility clusters, which are crucial for modeling the non-stationary characteristics of financial markets. Our generator architecture includes deconvolutional layers that progressively upsample the latent representation, allowing the model to generate detailed and realistic time series data. The effectiveness of CNNs in time series forecasting and anomaly detection has been demonstrated in various studies, including \textcite{lecun_deep_2015}. Moreover, a growing body of literature has shown that CNNs excel in quantitative finance applications. For instance, \textcite{dixon_high_2017} illustrated their utility in market trend forecasting, while \textcite{liu_option_2023} and \textcite{zhang_deeplob_2019} demonstrated their capabilities in option pricing, risk management, volatility prediction, and anomaly detection in high-frequency trading data. These studies underscore the versatility and robustness of CNN architectures in capturing complex, localized patterns within financial datasets.
 
-\subsubsection*{5.3 Long Short-Term Memory (LSTM) Networks}
+\subsubsection*{Long Short-Term Memory (LSTM) Networks}
 
 LSTM networks are designed to capture long-term dependencies in sequential data, making them ideal for modeling the temporal evolution of financial time series. The gating mechanisms in LSTMs allow the network to retain relevant information over extended periods, addressing issues such as vanishing gradients. Our LSTM-based generator includes fully connected layers to transform the latent space into a suitable input for the LSTM layers, followed by an output layer that generates the final time series. The use of LSTMs in financial modeling has been extensively studied, as highlighted by \textcite{hochreiter_long_1997}.
 
 While LSTMs have historically been a cornerstone in Natural Language Processing (NLP) for tasks such as language modeling and machine translation (\textcite{sutskever_sequence_2014, fischer_deep_2018}), the emergence of attention-based mechanisms—introduced by \textcite{bahdanau_neural_2016} and further advanced by \textcite{vaswani_attention_2023}—has largely supplanted them in that field. In contrast, within quantitative finance, LSTMs remain a robust tool. Their ability to model sequential dependencies has proven valuable in a range of applications, including market trend forecasting (\textcite{fischer_deep_2018}), risk management (\textcite{bao_deep_2017}), and volatility prediction, where capturing temporal nuances is critical.
 
-\subsubsection*{5.4 Integration within the GAN Framework}
+\subsubsection*{Integration within the GAN Framework}
 
 In our proposed model, these enhanced architectural components are integrated within the generator network while the discriminator maintains a conventional architecture. The overall training procedure remains consistent with the classical GAN framework, with the generator updates now encompassing additional hyperparameters related to the attention heads, convolutional filter sizes, and LSTM layer configurations.
 
@@ -377,7 +376,7 @@ Jensen--Shannon Divergence: 0.596089}
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.7\textwidth]{CNN_gen_samples}
-    \caption{Comparison of Real vs. Generated Time Series for AAPL, ACWI and JPM using Attention-Based GAN.}
+    \caption{Comparison of Real vs. Generated Time Series for AAPL, ACWI and JPM using CNN-Based GAN.}
     \label{fig:attention_comparison}
 \end{figure}
 
